@@ -66,7 +66,7 @@ Table of Contents
      1.2.  Requirements
    2.  Fetching PvD Additional Information for proxies
    3.  Enumerating proxies within a PvD
-     3.1.  Proprietary Keys in Proxy Definitions
+     3.1.  Proprietary Keys in Proxy Configurations
      3.2.  Example
    4.  Destination accessibility information for proxies
      4.1.  Proprietary Keys in Destination Rules
@@ -329,7 +329,7 @@ Table of Contents
    URI to learn the list of complete URIs that support non-default
    protocols, such as [CONNECT-UDP] and [CONNECT-IP].
 
-3.1.  Proprietary Keys in Proxy Definitions
+3.1.  Proprietary Keys in Proxy Configurations
 
    Implementations MAY include proprietary or vendor-specific keys in
    the sub-dictionaries of the proxies array to convey additional proxy
