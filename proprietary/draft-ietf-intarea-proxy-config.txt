@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 14 November 2025                                      Microsoft
+Expires: 21 November 2025                                      Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                             13 May 2025
+                                                             20 May 2025
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 14 November 2025.
+   This Internet-Draft will expire on 21 November 2025.
 
 Copyright Notice
 
@@ -335,11 +335,11 @@ Table of Contents
    the sub-dictionaries of the proxies array to convey additional proxy
    configuration information not defined in this specification.
 
-   A proprietary key MUST contain exactly one underscore character
-   ("_").  This character serves as a separator between the key name and
-   a vendor-specific namespace.  For example, "authmode_acme" could be a
-   proprietary key indicating an authentication mode defined by vendor
-   acme.
+   A proprietary key MUST contain at least one underscore character
+   ("_").  This character serves as a separator between a vendor-
+   specific namespace and the key name.  For example, "acme_authmode"
+   could be a proprietary key indicating an authentication mode defined
+   by vendor acme.
 
    When combined with mandatory list this mechanism allows
    implementations to extend proxy metadata while maintaining
@@ -504,10 +504,10 @@ content-length = 222
    this document.
 
    Similarly to proprietary keys in proxy definitions (Section 3.1), a
-   proprietary key in destination rule MUST contain exactly one
-   underscore character ("_"), which separates the key name from a
-   vendor-specific namespace.  For example, "processid_acme" could be a
-   key used to apply rules only to traffic of a specific process
+   proprietary key in destination rule MUST contain at least one
+   underscore character ("_"), which separates a vendor-specific
+   namespace from the key name.  For example, "acme_processid" could be
+   a key used to apply rules only to traffic of a specific process
    identifier as defined by vendor acme.
 
    Clients that encounter a proprietary key they do not recognise MUST
