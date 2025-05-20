@@ -508,7 +508,7 @@ content-length = 222
    underscore character ("_"), which separates a vendor-specific
    namespace from the key name.  For example, "acme_processid" could be
    a key used to apply rules only to traffic of a specific process
-   identifier as defined by vendor acme.
+   identifier as defined by a vendor named "acme".
 
    Clients that encounter a proprietary key they do not recognize MUST
    ignore the entire destination rule in which the key appears.  This
