@@ -306,7 +306,7 @@ Table of Contents
    does not understand a key from the list or cannot fully process the
    value of a key from the list MUST ignore the entire proxy definition.
 
-   The list can contain keys that are:
+   The list can contain keys that are either:
 
    *  registered in an IANA registry, defined in Section 7.2 and marked
       as optional.
