@@ -309,7 +309,7 @@ Table of Contents
    The list can contain keys that are either:
 
    *  registered in an IANA registry, defined in Section 7.2 and marked
-      as optional.
+      as optional;
 
    *  proprietary as defined in Section 3.1
 
