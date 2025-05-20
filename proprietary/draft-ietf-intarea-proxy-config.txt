@@ -311,7 +311,7 @@ Table of Contents
    *  registered in an IANA registry, defined in Section 7.2 and marked
       as optional;
 
-   *  proprietary as defined in Section 3.1
+   *  or proprietary, as defined in Section 3.1
 
    The mandatory list MUST NOT include any entries that are not present
    in the sub-dictionary.
