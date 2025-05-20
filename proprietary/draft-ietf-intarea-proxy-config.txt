@@ -343,8 +343,8 @@ Table of Contents
 
    When combined with mandatory list, this mechanism allows
    implementations to extend proxy metadata while maintaining
-   interoperability and ensuring safe fallback behaviour for clients
-   that do not support a given extension.
+   interoperability and ensuring safe fallback behavior for clients that
+   do not support a given extension.
 
 3.2.  Example
 
