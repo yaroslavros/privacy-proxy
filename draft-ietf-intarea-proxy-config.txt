@@ -68,7 +68,7 @@ Table of Contents
    3.  Enumerating proxies within a PvD
      3.1.  Example
    4.  Destination accessibility information for proxies
-     4.1.  Destination rule keys
+     4.1.  Destination Rule Keys
      4.2.  Using destination rules
      4.3.  Examples
    5.  Discovering proxies from network PvDs
@@ -403,7 +403,7 @@ content-length = 222
    rules", since they define rules about which destinations can be
    accessed for a particular proxy.
 
-4.1.  Destination rule keys
+4.1.  Destination Rule Keys
 
    This document defines four keys for destination rules.  Any
    destination rule MUST contain the proxies key.  Value corresponding
