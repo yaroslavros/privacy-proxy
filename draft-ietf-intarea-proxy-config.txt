@@ -69,7 +69,7 @@ Table of Contents
      3.1.  Example
    4.  Destination accessibility information for proxies
      4.1.  Destination Rule Keys
-     4.2.  Using destination rules
+     4.2.  Using Destination Rules
      4.3.  Examples
    5.  Discovering proxies from network PvDs
    6.  Security Considerations
@@ -486,7 +486,7 @@ content-length = 222
    "80") or inclusive ranges of ports.  For example "1024-2048" matches
    all ports from 1024 to 2048, including the 1024 and 1028.
 
-4.2.  Using destination rules
+4.2.  Using Destination Rules
 
    The destination rules can be used to determine which traffic can be
    sent through proxies, and which specific set of proxies to use for
