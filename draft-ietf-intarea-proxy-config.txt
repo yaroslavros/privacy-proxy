@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 21 November 2025                                      Microsoft
+Expires: 25 November 2025                                      Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                             20 May 2025
+                                                             24 May 2025
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 November 2025.
+   This Internet-Draft will expire on 25 November 2025.
 
 Copyright Notice
 
@@ -324,9 +324,9 @@ Table of Contents
    in the sub-dictionary.
 
    The value of identifier key is an optional string that can be used to
-   refer to the proxy from other dictionaries, specifically those
-   defined in Section 4.  The string value is an arbitrary JSON string.
-   Identifier values MAY be duplicated across different proxy
+   refer to a particular proxy from other dictionaries, specifically
+   those defined in Section 4.  The string value is an arbitrary JSON
+   string.  Identifier values MAY be duplicated across different proxy
    dictionaries in the proxies array, which would indicate that all
    references from other dictionaries to a particular identifier value
    applies to all matching proxies.  Proxies without identifier key are
