@@ -327,7 +327,7 @@ Table of Contents
    refer to a particular proxy from other dictionaries, specifically
    those defined in Section 4.  The string value is an arbitrary JSON
    string.  Identifier values MAY be duplicated across different proxy
-   dictionaries in the proxies array, which would indicate that all
+   dictionaries in the proxies array, which indicates that all
    references from other dictionaries to a particular identifier value
    applies to all matching proxies.  Proxies without identifier key are
    expected to accept any traffic since their destinations cannot be
