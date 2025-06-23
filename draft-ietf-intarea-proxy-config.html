@@ -1391,14 +1391,14 @@ proxy.example.org. 3600 IN HTTPS 1 . alpn="h3,h2" pvd
 </pre><a href="#section-2.1-4" class="pilcrow">¶</a>
 </div>
 <p id="section-2.1-5">can interpret the presence of the pvd key as an indication that it MAY perform a PvD fetch from
-"https://proxy.example.org/.well-known/pvd" using HTTP GET method.
-While this key is particularly useful for detecting proxy configurations when
+"https://proxy.example.org/.well-known/pvd" using HTTP GET method.<a href="#section-2.1-5" class="pilcrow">¶</a></p>
+<p id="section-2.1-6">While this key is particularly useful for detecting proxy configurations when
 looking up a DNS record for a known proxy name, this key generically provides
 a hint that PvD Additional Information is available, and can be used for use
 cases unrelated to proxies.
 This marker is advisory; clients MAY still attempt to fetch PvD Additional Information even if
-<code>pvd</code> SvcParamKey is not present.<a href="#section-2.1-5" class="pilcrow">¶</a></p>
-<p id="section-2.1-6">The <code>pvd</code> SvcParamKey is registered with IANA as described in <a href="#svcparamkey-iana" class="auto internal xref">Section 7.5</a>.<a href="#section-2.1-6" class="pilcrow">¶</a></p>
+<code>pvd</code> SvcParamKey is not present.<a href="#section-2.1-6" class="pilcrow">¶</a></p>
+<p id="section-2.1-7">The <code>pvd</code> SvcParamKey is registered with IANA as described in <a href="#svcparamkey-iana" class="auto internal xref">Section 7.5</a>.<a href="#section-2.1-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
