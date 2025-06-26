@@ -219,8 +219,8 @@ Table of Contents
    defined in Section 4.1 of [PVDDATA].  The presence of this key in an
    HTTPS or SVCB record signals that the proxy's PvD Additional
    Information can be fetched using the "https" scheme from the proxy
-   authority at the well-known path.  The presentation and wire-format
-   values for pvd SvcParamKey MUST be empty.
+   host on port 443 using the .well-known/pvd path.  The presentation
+   and wire-format values for pvd SvcParamKey MUST be empty.
 
    A client receiving a DNS record like the following:
 

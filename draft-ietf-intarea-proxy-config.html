@@ -1376,7 +1376,7 @@ this document defines a new SvcParamKey in HTTPS and SVCB DNS records defined in
 <p id="section-2.1-2">Presence of this SvcParamKey, named <code>pvd</code> indicates that the proxy host supports PvD discovery via
 the well-known PvD URI ".well-known/pvd" defined in <span><a href="https://rfc-editor.org/rfc/rfc8801#section-4.1" class="relref">Section 4.1</a> of [<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span>. The presence of this
 key in an HTTPS or SVCB record signals that the proxy's PvD Additional Information can be fetched
-using the "https" scheme from the proxy authority at the well-known path. The presentation and
+using the "https" scheme from the proxy host on port 443 using the <code>.well-known/pvd</code> path. The presentation and
 wire-format values for <code>pvd</code> SvcParamKey MUST be empty.<a href="#section-2.1-2" class="pilcrow">¶</a></p>
 <p id="section-2.1-3">A client receiving a DNS record like the following:<a href="#section-2.1-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-2.1-4">
