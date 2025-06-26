@@ -1052,7 +1052,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Pauly, et al.</td>
-<td class="center">Expires 25 December 2025</td>
+<td class="center">Expires 28 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-intarea-proxy-config-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-23" class="published">23 June 2025</time>
+<time datetime="2025-06-26" class="published">26 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-25">25 December 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-28">28 December 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1122,7 +1122,7 @@ and information about which destinations are accessible using a proxy.<a href="#
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 25 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 28 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1258,7 +1258,7 @@ and information about which destinations are accessible using a proxy.<a href="#
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">HTTP proxies that use the CONNECT method <span><a href="https://rfc-editor.org/rfc/rfc9110#section-9.3.6" class="relref">Section 9.3.6</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>
+<p id="section-1-1">HTTP proxies that use the CONNECT method defined in <span><a href="https://rfc-editor.org/rfc/rfc9110#section-9.3.6" class="relref">Section 9.3.6</a> of [<a href="#HTTP" class="cite xref">HTTP</a>]</span>
 (often referred to as "forward" proxies) allow clients to open connections to
 hosts via a proxy. These typically allow for TCP stream proxying, but can also support
 UDP proxying <span>[<a href="#CONNECT-UDP" class="cite xref">CONNECT-UDP</a>]</span> and IP packet proxying
@@ -1343,7 +1343,8 @@ a proxy. This PvD describes the properties of the network accessible through the
 issues an HTTP GET request for the well-known PvD URI (".well-known/pvd") <span>[<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span>
 and the host authority of the proxy. This is applicable for both proxies that are identified
 by a host and port only (such as SOCKS proxies and HTTP CONNECT proxies) and proxies
-that are identified by a URI or URI template.<a href="#section-2-2" class="pilcrow">¶</a></p>
+that are identified by a URI or URI template. The fetch MUST use the "https" scheme
+and the default port for HTTP over TLS, 443.<a href="#section-2-2" class="pilcrow">¶</a></p>
 <p id="section-2-3">For example, a client would issue the following request for the PvD associated
 with "https://proxy.example.org/masque{?target_host,target_port}":<a href="#section-2-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-2-4">
@@ -1355,23 +1356,16 @@ with "https://proxy.example.org/masque{?target_host,target_port}":<a href="#sect
 accept = application/pvd+json
 </pre><a href="#section-2-4" class="pilcrow">¶</a>
 </div>
-<p id="section-2-5">As another example, a client would send the following request for the PvD
-assocated with an HTTP CONNECT proxy on "proxy.example.org:8080":<a href="#section-2-5" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-2-6">
-<pre>
-:method = GET
-:scheme = https
-:authority = proxy.example.org:8080
-:path = /.well-known/pvd
-accept = application/pvd+json
-</pre><a href="#section-2-6" class="pilcrow">¶</a>
-</div>
-<p id="section-2-7">Note that all proxies that are colocated on the same host and port share the same PvD
+<p id="section-2-5">A client would send the same request as above for the PvD
+assocated with an HTTP CONNECT proxy on "proxy.example.org:8080".
+Note that the client will not make a request to port 8080, but
+to port 443.<a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-6">Note that all proxies that are co-located on the same host share the same PvD
 Additional Information. Proxy deployments that need separate PvD configuration properties
-SHOULD use different hosts.<a href="#section-2-7" class="pilcrow">¶</a></p>
-<p id="section-2-8">PvD Additional Information is required to contain the "identifier", "expires", and
+SHOULD use different hosts.<a href="#section-2-6" class="pilcrow">¶</a></p>
+<p id="section-2-7">PvD Additional Information is required to contain the "identifier", "expires", and
 "prefixes" keys. For proxy PvDs as defined in this document, the "identifier" MUST
-match the hostname of the HTTP proxy. The "prefixes" array SHOULD be empty by default.<a href="#section-2-8" class="pilcrow">¶</a></p>
+match the hostname of the HTTP proxy. The "prefixes" array SHOULD be empty by default.<a href="#section-2-7" class="pilcrow">¶</a></p>
 <div id="svcparamkey">
 <section id="section-2.1">
         <h3 id="name-discovery-via-https-svcb-re">
@@ -1633,7 +1627,7 @@ response to indicate a PvD that has two related proxy URIs.<a href="#section-3.3
 <pre>
 :status = 200
 content-type = application/pvd+json
-content-length = 307
+content-length = 322
 
 {
   "identifier": "proxy.example.org.",
@@ -1725,7 +1719,7 @@ with the initial content provided below.<a href="#section-4.1-3" class="pilcrow"
               <td class="text-left" rowspan="1" colspan="1">Yes</td>
               <td class="text-left" rowspan="1" colspan="1">An array of IPv4 and IPv6 addresses and subnets</td>
               <td class="text-left" rowspan="1" colspan="1">Array of Strings</td>
-              <td class="text-left" rowspan="1" colspan="1">["2001:DB8::1", "192.168.1.0/24"]</td>
+              <td class="text-left" rowspan="1" colspan="1">["2001:DB8::1", "192.0.2.0/24"]</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">ports</td>
@@ -1755,10 +1749,10 @@ clients will not resolve a domain being accessed through the proxy to an IP addr
 a proxy, so the subnet information may not be available.<a href="#section-4.1-7" class="pilcrow">¶</a></p>
 <p id="section-4.1-8">The <code>ports</code> array includes specific ports (used for matching TCP and/or UDP ports), as well as
 ranges of ports written with a low port value and a high port value, with a <code>-</code> in between.
-For example, "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 1028.
+For example, "1024-2048" matches all ports from 1024 to 2048, including the 1024 and 2048.
 If <code>ports</code> key is not present, all ports are assumed to match. Comma-separated port list may
 contain individual port numbers (such as "80") or inclusive ranges of ports. For example
-"1024-2048" matches all ports from 1024 to 2048, including the 1024 and 1028.<a href="#section-4.1-8" class="pilcrow">¶</a></p>
+"1024-2048" matches all ports from 1024 to 2048, including the 1024 and 2048.<a href="#section-4.1-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="using-destination-rules">
@@ -1827,8 +1821,8 @@ a single destination rule for "*.internal.example.org".<a href="#section-4.4-1" 
       "identifier": "default_proxy"
     },
     {
-      "protocol": "connect-udp",
-      "proxy": "https://proxy.example.org/masque{?target_host,target_port}",
+      "protocol": "http-connect",
+      "proxy": "proxy2.example.org:80",
       "identifier": "default_proxy"
     }
   ],
@@ -1842,7 +1836,7 @@ a single destination rule for "*.internal.example.org".<a href="#section-4.4-1" 
 </pre><a href="#section-4.4-2" class="pilcrow">¶</a>
 </div>
 <p id="section-4.4-3">The client could then choose to use either proxy associated with the "default_proxy" identifier
-for accessing names that fall within the "*.internal.example.org" zone. This would include the
+for accessing TCP hosts that fall within the "*.internal.example.org" zone. This would include the
 hostnames "internal.example.org", "foo.internal.example.org", "www.bar.internal.example.org" and
 all other hosts within "internal.example.org".<a href="#section-4.4-3" class="pilcrow">¶</a></p>
 <p id="section-4.4-4">In the next example, two proxies are defined with a separate identifiers, and there are
@@ -1868,7 +1862,7 @@ three destination rules:<a href="#section-4.4-4" class="pilcrow">¶</a></p>
   "proxy-match": [
     {
       "domains": [ "*.special.example.org" ],
-      "ports": [ 80, 443 ],
+      "ports": [ "80", "443", "49152-65535" ],
       "proxies": [ "special_proxy" ]
     },
     {
@@ -1884,11 +1878,104 @@ three destination rules:<a href="#section-4.4-4" class="pilcrow">¶</a></p>
 </pre><a href="#section-4.4-5" class="pilcrow">¶</a>
 </div>
 <p id="section-4.4-6">In this case, the client would use "special-proxy.example.org:80"
-for any traffic using ports 80 or 443 that matches "*.special.example.org".
-The client would not use any of the defined proxies for access to
+for any TCP traffic that matches "*.special.example.org" destined to ports 80, 443 or any port between
+49152 and 65535. The client would not use any of the defined proxies for access to
 "no-proxy.internal.example.org". And finally, the client would use
-"proxy.example.org:80" to access any other traffic that matches
+"proxy.example.org:80" to access any other TCP traffic that matches
 "*.internal.example.org".<a href="#section-4.4-6" class="pilcrow">¶</a></p>
+<p id="section-4.4-7">In the following example, three proxies are sharing a common identifier ("default-proxy"), but use
+separate protocols constraining the traffic that they can process.<a href="#section-4.4-7" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.4-8">
+<pre>
+{
+  "identifier": "proxy.example.org.",
+  "expires": "2023-06-23T06:00:00Z",
+  "prefixes": [],
+  "proxies": [
+    {
+      "protocol": "http-connect",
+      "proxy": "proxy.example.org:80",
+      "identifier": "default_proxy"
+    },
+    {
+      "protocol": "connect-udp",
+      "proxy": "https://proxy.example.org/masque/udp/{target_host},{target_port}",
+      "identifier": "default_proxy"
+    },
+    {
+      "protocol": "connect-ip",
+      "proxy": "https://proxy.example.org/masque/ip{?target,ipproto}",
+      "identifier": "default_proxy"
+    }
+  ],
+  "proxy-match": [
+    {
+      "domains": [ "*.internal.example.org" ],
+      "proxies": [ "default_proxy" ]
+    }
+  ]
+}
+</pre><a href="#section-4.4-8" class="pilcrow">¶</a>
+</div>
+<p id="section-4.4-9">The client would use proxies in the following way:<a href="#section-4.4-9" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.4-10.1">
+            <p id="section-4.4-10.1.1">Traffic not destined to hosts within the "*.internal.example.org" zone is not sent
+to any proxy defined in this configuration<a href="#section-4.4-10.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.4-10.2">
+            <p id="section-4.4-10.2.1">TCP traffic destined to hosts within the "*.internal.example.org" zone is sent
+either to the proxy with "http-connect" protocol or to the proxy with "connect-ip" protocol<a href="#section-4.4-10.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.4-10.3">
+            <p id="section-4.4-10.3.1">UDP traffic destined to hosts within the "*.internal.example.org" zone is sent
+either to the proxy with "connect-udp" protocol or to the proxy with "connect-ip" protocol<a href="#section-4.4-10.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.4-10.4">
+            <p id="section-4.4-10.4.1">Traffic other than TCP and UDP destined to hosts within the "*.internal.example.org" zone is sent
+either to the proxy with "connect-ip" protocol<a href="#section-4.4-10.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-4.4-11">The following example provides a configuration of proxies to be used by default with a
+set with exceptions to bypass:<a href="#section-4.4-11" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.4-12">
+<pre>
+{
+  "identifier": "proxy.example.org.",
+  "expires": "2023-06-23T06:00:00Z",
+  "prefixes": [],
+  "proxies": [
+    {
+      "protocol": "http-connect",
+      "proxy": "proxy.example.org:80",
+      "identifier": "default_proxy"
+    },
+    {
+      "protocol": "http-connect",
+      "proxy": "backup.example.org:80",
+      "identifier": "secondary_proxy"
+    }
+  ],
+  "proxy-match": [
+    {
+      "domains": [ "*.intranet.example.org" ],
+      "proxies": [ ]
+    },
+    {
+      "subnets": [ "192.168.0.0/16", "2001:DB8::/32" ],
+      "proxies": [ ]
+    },
+    {
+      "proxies": [ "default_proxy", "secondary_proxy" ]
+    }
+  ]
+}
+</pre><a href="#section-4.4-12" class="pilcrow">¶</a>
+</div>
+<p id="section-4.4-13">In this case, the client would not send to the proxies any TCP traffic
+that is not destined to hosts matching "*.intranet.example.org", 192.168.0.0/16 or 2001:DB8::/32.
+Due to the order in "proxies" list in the last rule of "proxy-match", the client would prefer
+"proxy.example.org:80" over "backup.example.org:80"<a href="#section-4.4-13" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1996,7 +2083,8 @@ requested to ensure that defined keys do not overlap in names or semantics.<a hr
 This new registry reserves JSON values for the <code>protocol</code> key in <code>proxies</code> sub-dictionaries.
 The initial contents of this registry are given in <a href="#proxy-protocol-value-table" class="auto internal xref">Table 2</a>.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
 <p id="section-7.3-2">New assignments in the "Proxy Protocol PvD Values" registry will be administered by IANA through Expert Review <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>.
-Experts are requested to ensure that defined keys do not overlap in names or semantics, and have clear format definitions.
+Experts are requested to ensure that defined keys do not overlap in names or semantics, do not contain an underscore character ("_")
+in the names (since underscores are reserved for vendor-specific keys), and have clear format definitions.
 The reference and notes fields MAY be empty.<a href="#section-7.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2008,8 +2096,9 @@ The reference and notes fields MAY be empty.<a href="#section-7.3-2" class="pilc
 <p id="section-7.4-1">IANA is requested to create a new registry "Proxy Destination Rule PvD Keys", within the "Provisioning Domains (PvDs)" registry page.
 This new registry reserves JSON keys for use in sub-dictionaries under the <code>proxy-match</code> key.
 The initial contents of this registry are given in <a href="#destination-rule-keys-table" class="auto internal xref">Table 3</a>.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
-<p id="section-7.4-2">New assignments in the "Proxy Destination Rule PvD Keys" registry will be administered by IANA through Expert Review <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>. Experts are
-requested to ensure that defined keys do not overlap in names or semantics.<a href="#section-7.4-2" class="pilcrow">¶</a></p>
+<p id="section-7.4-2">New assignments in the "Proxy Destination Rule PvD Keys" registry will be administered by IANA through Expert Review <span>[<a href="#RFC8126" class="cite xref">RFC8126</a>]</span>.
+Experts are requested to ensure that defined keys do not overlap in names or semantics, and do not contain an underscore character ("_")
+in the names (since underscores are reserved for vendor-specific keys).<a href="#section-7.4-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="svcparamkey-iana">
