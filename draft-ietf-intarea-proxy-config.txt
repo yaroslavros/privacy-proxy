@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 28 December 2025                                      Microsoft
+Expires: 6 March 2026                                          Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                            26 June 2025
+                                                        2 September 2025
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 December 2025.
+   This Internet-Draft will expire on 6 March 2026.
 
 Copyright Notice
 
@@ -271,58 +271,55 @@ Table of Contents
    proxy.  The keys are registered with IANA as described in
    Section 7.2, with the initial content provided below.
 
-   +=================================+========+=============+=======+===============+
-   |JSON Key                         |Optional|Description  |Type   |Example        |
-   +=================================+========+=============+=======+===============+
-   |protocol                         |No      |The protocol |String |"connect-udp"  |
-   |                                 |        |used to      |       |               |
-   |                                 |        |communicate  |       |               |
-   |                                 |        |with the     |       |               |
-   |                                 |        |proxy        |       |               |
-   +---------------------------------+--------+-------------+-------+---------------+
-   |proxy                            |No      |String       |String |               |
-   |                                 |        |containing   |       |               |
-   |                                 |        |the URI      |       |               |
-   |                                 |        |template or  |       |               |
-   |                                 |        |hostname and |       |               |
-   |                                 |        |port of the  |       |               |
-   |                                 |        |proxy,       |       |               |
-   |                                 |        |depending on |       |               |
-   |                                 |        |the format   |       |               |
-   |                                 |        |defined by   |       |               |
-   |                                 |        |the protocol |       |               |
-   +---------------------------------+--------+-------------+-------+---------------+
-   |"https://proxy.example.org:4443/ |        |             |       |               |
-   |masque{?target_host,target_port}"|        |             |       |               |
-   +---------------------------------+--------+-------------+-------+---------------+
-   |mandatory                        |Yes     |An array of  |Array  |["example_key"]|
-   |                                 |        |optional keys|of     |               |
-   |                                 |        |that client  |Strings|               |
-   |                                 |        |must         |       |               |
-   |                                 |        |understand   |       |               |
-   |                                 |        |and process  |       |               |
-   |                                 |        |to use this  |       |               |
-   |                                 |        |proxy        |       |               |
-   +---------------------------------+--------+-------------+-------+---------------+
-   |alpn                             |Yes     |An array of  |Array  |["h3","h2"]    |
-   |                                 |        |Application- |of     |               |
-   |                                 |        |Layer        |Strings|               |
-   |                                 |        |Protocol     |       |               |
-   |                                 |        |Negotiation  |       |               |
-   |                                 |        |protocol     |       |               |
-   |                                 |        |identifiers  |       |               |
-   +---------------------------------+--------+-------------+-------+---------------+
-   |identifier                       |Yes     |A string used|String |"udp-proxy"    |
-   |                                 |        |to refer to  |       |               |
-   |                                 |        |the proxy,   |       |               |
-   |                                 |        |which can be |       |               |
-   |                                 |        |referenced by|       |               |
-   |                                 |        |other        |       |               |
-   |                                 |        |dictionaries,|       |               |
-   |                                 |        |such as      |       |               |
-   |                                 |        |entries in   |       |               |
-   |                                 |        |proxy-match  |       |               |
-   +---------------------------------+--------+-------------+-------+---------------+
+   +==========+========+=============+=======+=================================+
+   |JSON Key  |Optional|Description  |Type   |Example                          |
+   +==========+========+=============+=======+=================================+
+   |protocol  |No      |The protocol |String |"connect-udp"                    |
+   |          |        |used to      |       |                                 |
+   |          |        |communicate  |       |                                 |
+   |          |        |with the     |       |                                 |
+   |          |        |proxy        |       |                                 |
+   +----------+--------+-------------+-------+---------------------------------+
+   |proxy     |No      |String       |String |"https://proxy.example.org:4443/ |
+   |          |        |containing   |       |masque{?target_host,target_port}"|
+   |          |        |the URI      |       |                                 |
+   |          |        |template or  |       |                                 |
+   |          |        |hostname and |       |                                 |
+   |          |        |port of the  |       |                                 |
+   |          |        |proxy,       |       |                                 |
+   |          |        |depending on |       |                                 |
+   |          |        |the format   |       |                                 |
+   |          |        |defined by   |       |                                 |
+   |          |        |the protocol |       |                                 |
+   +----------+--------+-------------+-------+---------------------------------+
+   |mandatory |Yes     |An array of  |Array  |["example_key"]                  |
+   |          |        |optional keys|of     |                                 |
+   |          |        |that client  |Strings|                                 |
+   |          |        |must         |       |                                 |
+   |          |        |understand   |       |                                 |
+   |          |        |and process  |       |                                 |
+   |          |        |to use this  |       |                                 |
+   |          |        |proxy        |       |                                 |
+   +----------+--------+-------------+-------+---------------------------------+
+   |alpn      |Yes     |An array of  |Array  |["h3","h2"]                      |
+   |          |        |Application- |of     |                                 |
+   |          |        |Layer        |Strings|                                 |
+   |          |        |Protocol     |       |                                 |
+   |          |        |Negotiation  |       |                                 |
+   |          |        |protocol     |       |                                 |
+   |          |        |identifiers  |       |                                 |
+   +----------+--------+-------------+-------+---------------------------------+
+   |identifier|Yes     |A string used|String |"udp-proxy"                      |
+   |          |        |to refer to  |       |                                 |
+   |          |        |the proxy,   |       |                                 |
+   |          |        |which can be |       |                                 |
+   |          |        |referenced by|       |                                 |
+   |          |        |other        |       |                                 |
+   |          |        |dictionaries,|       |                                 |
+   |          |        |such as      |       |                                 |
+   |          |        |entries in   |       |                                 |
+   |          |        |proxy-match  |       |                                 |
+   +----------+--------+-------------+-------+---------------------------------+
 
        Table 1: Initial Proxy Information PvD Keys Registry Contents
 
@@ -525,25 +522,24 @@ content-length = 322
    proxies array).  A wildcard prefix (*.) is used to indicate matching
    entire domains or subdomains instead of specific hostnames.  Note
    that this can be used to match multiple levels of subdomains.  For
-   example "_.example.com" matches "internal.example.com" as well as
+   example "*.example.com" matches "internal.example.com" as well as
    "www.public.example.com".  Entries that include the wildcard prefix
    also MUST be treated as if they match an FQDN that only contains the
    string after the prefix, with no subdomain.  So, an entry
-   "_.example.com" in the domains array of a proxy-match rule would
+   "*.example.com" in the domains array of a proxy-match rule would
    match the FQDN "example.com".  This is done to prevent commonly
    needing to include both "*.example.com" and "example.com" in the
    domains array of a proxy-match rule.
 
    The subnets array includes IPv4 and IPv6 address literals, as well as
    IPv4 and IPv6 address subnets written using CIDR notation.  Subnet-
-   based destination information is only meant be used when applications
-   are communicating with destinations identified by only an IP address,
-   and not a hostname.
-
-   Destination rules SHOULD NOT contain both the domains key and the
-   subnets key.  Many clients will not resolve a domain being accessed
-   through the proxy to an IP address before using a proxy, so the
-   subnet information may not be available.
+   based destination information can apply to cases where applications
+   are communicating directly with an IP address (without having
+   resolved a DNS name) as well as cases where an application resolved a
+   DNS name to a set of IP addresses.  Note that if destination rules
+   includes an empty proxies list (indicating that no proxy is
+   applicable for this subnet), an application can only reliably follow
+   this destination rule if it resolves DNS names prior to proxying.
 
    The ports array includes specific ports (used for matching TCP and/or
    UDP ports), as well as ranges of ports written with a low port value
@@ -580,7 +576,13 @@ content-length = 322
    A matched rule will then either point to one or more proxy identifier
    values, which correspond to proxies defined in the list from
    Section 3, or instructs the client to not send the matching traffic
-   to any proxy.
+   to any proxy.  If a matching rule contains more then one identifier
+   the client should treat the list as an ordered list, where the first
+   identifier is the most preferred.  Multiple proxy dictionaries can
+   contain the same identifier value.  In this case, the client can
+   choose any of the proxies; however, the client ought to prefer using
+   the same proxy for the consecutive requests to the same proxy
+   identifier to increase connection reuse.
 
    Entries listed in a proxy-match object MUST NOT expand the set of
    destinations that a client is willing to send to a particular proxy.
@@ -646,7 +648,10 @@ content-length = 322
    the "*.internal.example.org" zone.  This would include the hostnames
    "internal.example.org", "foo.internal.example.org",
    "www.bar.internal.example.org" and all other hosts within
-   "internal.example.org".
+   "internal.example.org".  The client will use the same proxy for the
+   following requests to hosts falling into the "*.internal.example.org"
+   zone to increase connection reuse and make use of the connection
+   resumption.
 
    In the next example, two proxies are defined with a separate
    identifiers, and there are three destination rules:
@@ -739,8 +744,8 @@ content-length = 322
       the proxy with "connect-ip" protocol
 
    *  Traffic other than TCP and UDP destined to hosts within the
-      "*.internal.example.org" zone is sent either to the proxy with
-      "connect-ip" protocol
+      "*.internal.example.org" zone is sent to the proxy with "connect-
+      ip" protocol
 
    The following example provides a configuration of proxies to be used
    by default with a set with exceptions to bypass:
@@ -840,8 +845,14 @@ content-length = 322
 
    Type: Array of dictionaries
 
-   Example: [ { "protocol": "connect-udp", "proxy":
-   "https://proxy.example.org/masque{?target_host,target_port}" } ]
+   Example:
+
+ [
+  {
+   "protocol": "connect-udp",
+   "proxy": "https://proxy.example.org/masque{?target_host,target_port}"
+  }
+ ]
 
 7.1.2.  proxy-match Key
 
@@ -852,8 +863,14 @@ content-length = 322
 
    Type: Array of dictionaries
 
-   Example: [ { "domains": [ "*.internal.example.org" ], "proxies": [
-   "default_proxy" ] } ]
+   Example:
+
+   [
+    {
+     "domains": [ "*.internal.example.org" ],
+     "proxies": [ "default_proxy" ]
+    }
+   ]
 
 7.2.  New PvD Proxy Information Registry
 
@@ -932,9 +949,9 @@ content-length = 322
    [CONNECT-TCP]
               Schwartz, B. M., "Template-Driven HTTP CONNECT Proxying
               for TCP", Work in Progress, Internet-Draft, draft-ietf-
-              httpbis-connect-tcp-08, 11 June 2025,
+              httpbis-connect-tcp-09, 30 June 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              connect-tcp-08>.
+              connect-tcp-09>.
 
    [CONNECT-UDP]
               Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
