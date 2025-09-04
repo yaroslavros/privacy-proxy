@@ -1345,39 +1345,27 @@ and the host authority of the proxy. This is applicable for both proxies that ar
 by a host and port only (such as SOCKS proxies and HTTP CONNECT proxies) and proxies
 that are identified by a URI or URI template. The fetch MUST use the "https" scheme
 and the default port for HTTP over TLS, 443.<a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">It is not necessary for the client to re‑fetch PvD Additional Information unless
-one of the following conditions occurs:<a href="#section-2-3" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-2-4.1">
-          <p id="section-2-4.1.1">The current time is beyond the "expires" value defined in <span><a href="https://rfc-editor.org/rfc/rfc8801#section-4.3" class="relref">Section 4.3</a> of [<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span><a href="#section-2-4.1.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-2-4.2">
-          <p id="section-2-4.2.1">A new Sequence Number for that PvD is received in a Router Advertisement (RA)<a href="#section-2-4.2.1" class="pilcrow">¶</a></p>
-</li>
-      </ul>
-<p id="section-2-5">To avoid synchronized queries toward the server hosting the PvD Additional Information
-when an object expires, clients MUST apply a randomized backoff as specified in <span><a href="https://rfc-editor.org/rfc/rfc8801#section-4.1" class="relref">Section 4.1</a> of [<a href="#PVDDATA" class="cite xref">PVDDATA</a>]</span>.<a href="#section-2-5" class="pilcrow">¶</a></p>
-<p id="section-2-6">For example, a client would issue the following request for the PvD associated
-with "https://proxy.example.org/masque{?target_host,target_port}":<a href="#section-2-6" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-2-7">
+<p id="section-2-3">For example, a client would issue the following request for the PvD associated
+with "https://proxy.example.org/masque{?target_host,target_port}":<a href="#section-2-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-2-4">
 <pre>
 :method = GET
 :scheme = https
 :authority = proxy.example.org
 :path = /.well-known/pvd
 accept = application/pvd+json
-</pre><a href="#section-2-7" class="pilcrow">¶</a>
+</pre><a href="#section-2-4" class="pilcrow">¶</a>
 </div>
-<p id="section-2-8">A client would send the same request as above for the PvD
+<p id="section-2-5">A client would send the same request as above for the PvD
 assocated with an HTTP CONNECT proxy on "proxy.example.org:8080".
 Note that the client will not make a request to port 8080, but
-to port 443.<a href="#section-2-8" class="pilcrow">¶</a></p>
-<p id="section-2-9">Note that all proxies that are co-located on the same host share the same PvD
+to port 443.<a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-6">Note that all proxies that are co-located on the same host share the same PvD
 Additional Information. Proxy deployments that need separate PvD configuration properties
-SHOULD use different hosts.<a href="#section-2-9" class="pilcrow">¶</a></p>
-<p id="section-2-10">PvD Additional Information is required to contain the "identifier", "expires", and
+SHOULD use different hosts.<a href="#section-2-6" class="pilcrow">¶</a></p>
+<p id="section-2-7">PvD Additional Information is required to contain the "identifier", "expires", and
 "prefixes" keys. For proxy PvDs as defined in this document, the "identifier" MUST
-match the hostname of the HTTP proxy. The "prefixes" array SHOULD be empty by default.<a href="#section-2-10" class="pilcrow">¶</a></p>
+match the hostname of the HTTP proxy. The "prefixes" array SHOULD be empty by default.<a href="#section-2-7" class="pilcrow">¶</a></p>
 <div id="svcparamkey">
 <section id="section-2.1">
         <h3 id="name-discovery-via-https-svcb-re">
