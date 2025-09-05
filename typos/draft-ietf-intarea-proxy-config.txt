@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 8 March 2026                                          Microsoft
+Expires: 9 March 2026                                          Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                        4 September 2025
+                                                        5 September 2025
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 March 2026.
+   This Internet-Draft will expire on 9 March 2026.
 
 Copyright Notice
 
@@ -782,10 +782,10 @@ content-length = 322
      ]
    }
 
-   In this case, the client would not send to the proxies any TCP
-   traffic that is destined to hosts matching "*.intranet.example.org",
-   192.168.0.0/16 or 2001:DB8::/32.  Due to the order in "proxies" list
-   in the last rule of "proxy-match", the client would prefer
+   In this case, the client will not forward TCP traffic that is
+   destined to hosts matching "*.intranet.example.org", 192.168.0.0/16
+   or 2001:DB8::/32, through the proxies.  Due to the order in "proxies"
+   list in the last rule of "proxy-match", the client would prefer
    "proxy.example.org:80" over "backup.example.org:80"
 
 5.  Discovering proxies from network PvDs
