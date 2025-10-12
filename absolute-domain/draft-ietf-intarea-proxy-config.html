@@ -1733,8 +1733,7 @@ Entries that include the wildcard prefix also MUST be treated as if they match
 an FQDN that only contains the string after the prefix, with no subdomain. So,
 an entry "*.example.com" in the <code>domains</code> array of a <code>proxy-match</code> rule would match the FQDN "example.com".
 This is done to prevent commonly needing to include both "*.example.com" and "example.com"
-in the <code>domains</code> array of a <code>proxy-match</code> rule. Domain name matching in <code>proxy-match</code> applies to the
-full authority component of the URI, represented as <code>reg-name</code> according to <span><a href="https://rfc-editor.org/rfc/rfc3986#section-3.2.2" class="relref">Section 3.2.2</a> of [<a href="#URI" class="cite xref">URI</a>]</span>.
+in the <code>domains</code> array of a <code>proxy-match</code> rule.
 Matches are performed against absolute domain names, independent of the client's configured DNS search suffixes.
 Clients MUST NOT apply local DNS suffix search rules when interpreting <code>domains</code> entries. A trailing dot (".")
 at the end of a domain name is not required; the matching logic is the same regardless of its presence or absence.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
@@ -2204,10 +2203,6 @@ in the names (since underscores are reserved for vendor-specific keys).<a href="
 <dt id="SVCB-DNS">[SVCB-DNS]</dt>
         <dd>
 <span class="refAuthor">Schwartz, B.</span>, <span class="refAuthor">Bishop, M.</span>, and <span class="refAuthor">E. Nygren</span>, <span class="refTitle">"Service Binding and Parameter Specification via the DNS (SVCB and HTTPS Resource Records)"</span>, <span class="seriesInfo">RFC 9460</span>, <span class="seriesInfo">DOI 10.17487/RFC9460</span>, <time datetime="2023-11" class="refDate">November 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9460">https://www.rfc-editor.org/rfc/rfc9460</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="URI">[URI]</dt>
-        <dd>
-<span class="refAuthor">Berners-Lee, T.</span>, <span class="refAuthor">Fielding, R.</span>, and <span class="refAuthor">L. Masinter</span>, <span class="refTitle">"Uniform Resource Identifier (URI): Generic Syntax"</span>, <span class="seriesInfo">STD 66</span>, <span class="seriesInfo">RFC 3986</span>, <span class="seriesInfo">DOI 10.17487/RFC3986</span>, <time datetime="2005-01" class="refDate">January 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3986">https://www.rfc-editor.org/rfc/rfc3986</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="URITEMPLATE">[URITEMPLATE]</dt>
       <dd>

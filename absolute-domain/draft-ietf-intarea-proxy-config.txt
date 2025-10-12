@@ -530,14 +530,12 @@ content-length = 322
    "*.example.com" in the domains array of a proxy-match rule would
    match the FQDN "example.com".  This is done to prevent commonly
    needing to include both "*.example.com" and "example.com" in the
-   domains array of a proxy-match rule.  Domain name matching in proxy-
-   match applies to the full authority component of the URI, represented
-   as reg-name according to Section 3.2.2 of [URI].  Matches are
-   performed against absolute domain names, independent of the client's
-   configured DNS search suffixes.  Clients MUST NOT apply local DNS
-   suffix search rules when interpreting domains entries.  A trailing
-   dot (".") at the end of a domain name is not required; the matching
-   logic is the same regardless of its presence or absence.
+   domains array of a proxy-match rule.  Matches are performed against
+   absolute domain names, independent of the client's configured DNS
+   search suffixes.  Clients MUST NOT apply local DNS suffix search
+   rules when interpreting domains entries.  A trailing dot (".") at the
+   end of a domain name is not required; the matching logic is the same
+   regardless of its presence or absence.
 
    The subnets array includes IPv4 and IPv6 address literals, as well as
    IPv4 and IPv6 address subnets written using CIDR notation.  Subnet-
@@ -1004,11 +1002,6 @@ content-length = 322
               and Parameter Specification via the DNS (SVCB and HTTPS
               Resource Records)", RFC 9460, DOI 10.17487/RFC9460,
               November 2023, <https://www.rfc-editor.org/rfc/rfc9460>.
-
-   [URI]      Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
-              Resource Identifier (URI): Generic Syntax", STD 66,
-              RFC 3986, DOI 10.17487/RFC3986, January 2005,
-              <https://www.rfc-editor.org/rfc/rfc3986>.
 
    [URITEMPLATE]
               Gregorio, J., Fielding, R., Hadley, M., Nottingham, M.,
