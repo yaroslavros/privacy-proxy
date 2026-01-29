@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 10 May 2026                                           Microsoft
+Expires: 2 August 2026                                         Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                         6 November 2025
+                                                         29 January 2026
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,11 +43,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 May 2026.
+   This Internet-Draft will expire on 2 August 2026.
 
 Copyright Notice
 
-   Copyright (c) 2025 IETF Trust and the persons identified as the
+   Copyright (c) 2026 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -342,7 +342,11 @@ Table of Contents
    registry (Section 7.3), with the initial contents provided below.
    For consistency, any new proxy types that use HTTP Upgrade Tokens
    (and use the :protocol pseudo-header) SHOULD define the protocol
-   value to match the Upgrade Token / :protocol value.
+   value to match the Upgrade Token / :protocol value.  Extensions to
+   proxy types that use the same HTTP Upgrade Tokens ought to be covered
+   by the same protocol value; if there are properties specific to an
+   extension, the extensions can either define new optional keys or rely
+   on negotation within the protocol to discover support.
 
      +===============+===========+===============+===================+
      | Proxy         | Proxy     | Reference     | Notes             |
@@ -399,8 +403,9 @@ Table of Contents
 
    The value of identifier key is a string that can be used to refer to
    a particular proxy from other dictionaries, specifically those
-   defined in Section 4.  The string value is an arbitrary JSON string.
-   Identifier values MAY be duplicated across different proxy
+   defined in Section 4.  The string value is an arbitrary non-empty
+   JSON string using UTF-8 encoding as discussed in Section 8.1 of
+   [JSON].  Identifier values MAY be duplicated across different proxy
    dictionaries in the proxies array, which indicates that all
    references from other dictionaries to a particular identifier value
    apply to all matching proxies.  Proxies without the identifier key
@@ -539,32 +544,33 @@ content-length = 322
    The domains array includes specific FQDNs and zones that are either
    accessible using specific proxy (for rules with non-empty proxies
    array) or non-accessible through any proxies (for rules with empty
-   proxies array).  A wildcard prefix (*.) is used to indicate matching
-   entire domains or subdomains instead of specific hostnames.  Note
-   that this can be used to match multiple levels of subdomains.  For
-   example "*.example.com" matches "internal.example.com" as well as
-   "www.public.example.com".  Entries that include the wildcard prefix
-   also MUST be treated as if they match an FQDN that only contains the
-   string after the prefix, with no subdomain.  So, an entry
-   "*.example.com" in the domains array of a proxy-match rule would
-   match the FQDN "example.com".  This is done to prevent commonly
-   needing to include both "*.example.com" and "example.com" in the
-   domains array of a proxy-match rule.  Matches are performed against
-   absolute domain names, independent of the client's configured DNS
-   search suffixes.  Clients MUST NOT apply local DNS suffix search
-   rules when interpreting domains entries.  A trailing dot (".") at the
-   end of a domain name is not required; the matching logic is the same
-   regardless of its presence or absence.
+   proxies array).  Wildcards are allowed only as prefixes (*.).  A
+   wildcard prefix is used to indicate matching entire domains or
+   subdomains instead of specific hostnames.  Note that this can be used
+   to match multiple levels of subdomains.  For example "*.example.com"
+   matches "internal.example.com" as well as "www.public.example.com".
+   Entries that include the wildcard prefix also MUST be treated as if
+   they match an FQDN that only contains the string after the prefix,
+   with no subdomain.  So, an entry "*.example.com" in the domains array
+   of a proxy-match rule would match the FQDN "example.com".  This is
+   done to prevent commonly needing to include both "*.example.com" and
+   "example.com" in the domains array of a proxy-match rule.  Matches
+   are performed against absolute domain names, independent of the
+   client's configured DNS search suffixes.  Clients MUST NOT apply
+   local DNS suffix search rules when interpreting domains entries.  A
+   trailing dot (".") at the end of a domain name is not required; the
+   matching logic is the same regardless of its presence or absence.
 
    The subnets array includes IPv4 and IPv6 address literals, as well as
-   IPv4 and IPv6 address subnets written using CIDR notation.  Subnet-
-   based destination information can apply to cases where applications
-   are communicating directly with an IP address (without having
-   resolved a DNS name) as well as cases where an application resolved a
-   DNS name to a set of IP addresses.  Note that if destination rules
-   includes an empty proxies list (indicating that no proxy is
-   applicable for this subnet), an application can only reliably follow
-   this destination rule if it resolves DNS names prior to proxying.
+   IPv4 and IPv6 address subnets written using CIDR notation [CIDR].
+   Subnet-based destination information can apply to cases where
+   applications are communicating directly with an IP address (without
+   having resolved a DNS name) as well as cases where an application
+   resolved a DNS name to a set of IP addresses.  Note that if
+   destination rules includes an empty proxies list (indicating that no
+   proxy is applicable for this subnet), an application can only
+   reliably follow this destination rule if it resolves DNS names prior
+   to proxying.
 
    The ports array includes specific ports (used for matching TCP and/or
    UDP ports), as well as ranges of ports written with a low port value
@@ -911,7 +917,10 @@ content-length = 322
    New assignments in the "Proxy Information PvD Keys" registry will be
    administered by IANA through Expert Review [RFC8126].  Experts are
    requested to ensure that defined keys do not overlap in names or
-   semantics.
+   semantics, do not contain an underscore character ("_") in the names
+   (since underscores are reserved for vendor-specific keys), and have
+   clear format definitions.  The reference and notes fields MAY be
+   empty.
 
 7.3.  New PvD Proxy Protocol Registry
 
@@ -923,11 +932,8 @@ content-length = 322
 
    New assignments in the "Proxy Protocol PvD Values" registry will be
    administered by IANA through Expert Review [RFC8126].  Experts are
-   requested to ensure that defined keys do not overlap in names or
-   semantics, do not contain an underscore character ("_") in the names
-   (since underscores are reserved for vendor-specific keys), and have
-   clear format definitions.  The reference and notes fields MAY be
-   empty.
+   requested to ensure that defined keys do not overlap in names.  The
+   reference and notes fields MAY be empty.
 
 7.4.  New PvD Proxy Destination Rule Registry
 
@@ -977,9 +983,9 @@ content-length = 322
    [CONNECT-TCP]
               Schwartz, B. M., "Template-Driven HTTP CONNECT Proxying
               for TCP", Work in Progress, Internet-Draft, draft-ietf-
-              httpbis-connect-tcp-09, 30 June 2025,
+              httpbis-connect-tcp-10, 5 December 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              connect-tcp-09>.
+              connect-tcp-10>.
 
    [CONNECT-UDP]
               Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
@@ -1037,6 +1043,11 @@ content-length = 322
               <https://www.rfc-editor.org/rfc/rfc6570>.
 
 8.2.  Informative References
+
+   [CIDR]     Fuller, V. and T. Li, "Classless Inter-domain Routing
+              (CIDR): The Internet Address Assignment and Aggregation
+              Plan", BCP 122, RFC 4632, DOI 10.17487/RFC4632, August
+              2006, <https://www.rfc-editor.org/rfc/rfc4632>.
 
    [IKEV2SPLIT]
               Pauly, T. and P. Wouters, "Split DNS Configuration for the
