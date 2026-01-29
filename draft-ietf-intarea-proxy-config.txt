@@ -405,6 +405,9 @@ Table of Contents
    a particular proxy from other dictionaries, specifically those
    defined in Section 4.  The string value is an arbitrary non-empty
    JSON string using UTF-8 encoding as discussed in Section 8.1 of
+   [JSON].  Characters that need to be escaped in JSON strings per
+   Section 7 of [JSON] are NOT RECOMMENDED as they can lead to
+   difficulties in string comparisions as discussed in Section 8.3 of
    [JSON].  Identifier values MAY be duplicated across different proxy
    dictionaries in the proxies array, which indicates that all
    references from other dictionaries to a particular identifier value
