@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 2 August 2026                                         Microsoft
+Expires: 3 August 2026                                         Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                         29 January 2026
+                                                         30 January 2026
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 August 2026.
+   This Internet-Draft will expire on 3 August 2026.
 
 Copyright Notice
 
@@ -287,54 +287,54 @@ Table of Contents
    proxy.  The keys are registered with IANA as described in
    Section 7.2, with the initial content provided below.
 
-   +==========+========+=============+=======+=================================+
-   |JSON Key  |Optional|Description  |Type   |Example                          |
-   +==========+========+=============+=======+=================================+
-   |protocol  |No      |The protocol |String |"connect-udp"                    |
-   |          |        |used to      |       |                                 |
-   |          |        |communicate  |       |                                 |
-   |          |        |with the     |       |                                 |
-   |          |        |proxy        |       |                                 |
-   +----------+--------+-------------+-------+---------------------------------+
-   |proxy     |No      |String       |String |"https://proxy.example.org:4443/ |
-   |          |        |containing   |       |masque{?target_host,target_port}"|
-   |          |        |the URI      |       |                                 |
-   |          |        |template or  |       |                                 |
-   |          |        |host and port|       |                                 |
-   |          |        |of the proxy,|       |                                 |
-   |          |        |depending on |       |                                 |
-   |          |        |the format   |       |                                 |
-   |          |        |defined by   |       |                                 |
-   |          |        |the protocol |       |                                 |
-   +----------+--------+-------------+-------+---------------------------------+
-   |mandatory |Yes     |An array of  |Array  |["example_key"]                  |
-   |          |        |optional keys|of     |                                 |
-   |          |        |that client  |Strings|                                 |
-   |          |        |must         |       |                                 |
-   |          |        |understand   |       |                                 |
-   |          |        |and process  |       |                                 |
-   |          |        |to use this  |       |                                 |
-   |          |        |proxy        |       |                                 |
-   +----------+--------+-------------+-------+---------------------------------+
-   |alpn      |Yes     |An array of  |Array  |["h3","h2"]                      |
-   |          |        |Application- |of     |                                 |
-   |          |        |Layer        |Strings|                                 |
-   |          |        |Protocol     |       |                                 |
-   |          |        |Negotiation  |       |                                 |
-   |          |        |protocol     |       |                                 |
-   |          |        |identifiers  |       |                                 |
-   +----------+--------+-------------+-------+---------------------------------+
-   |identifier|Yes     |A string used|String |"udp-proxy"                      |
-   |          |        |to refer to  |       |                                 |
-   |          |        |the proxy,   |       |                                 |
-   |          |        |which can be |       |                                 |
-   |          |        |referenced by|       |                                 |
-   |          |        |other        |       |                                 |
-   |          |        |dictionaries,|       |                                 |
-   |          |        |such as      |       |                                 |
-   |          |        |entries in   |       |                                 |
-   |          |        |proxy-match  |       |                                 |
-   +----------+--------+-------------+-------+---------------------------------+
+   +==========+========+=============+=======+===========================+
+   |JSON Key  |Optional|Description  |Type   |Example                    |
+   +==========+========+=============+=======+===========================+
+   |protocol  |No      |The protocol |String |"connect-udp"              |
+   |          |        |used to      |       |                           |
+   |          |        |communicate  |       |                           |
+   |          |        |with the     |       |                           |
+   |          |        |proxy        |       |                           |
+   +----------+--------+-------------+-------+---------------------------+
+   |proxy     |No      |String       |String |"https://example.org:4443/ |
+   |          |        |containing   |       |masque/                    |
+   |          |        |the URI      |       |{?target_host,target_port}"|
+   |          |        |template or  |       |                           |
+   |          |        |host and port|       |                           |
+   |          |        |of the proxy,|       |                           |
+   |          |        |depending on |       |                           |
+   |          |        |the format   |       |                           |
+   |          |        |defined by   |       |                           |
+   |          |        |the protocol |       |                           |
+   +----------+--------+-------------+-------+---------------------------+
+   |mandatory |Yes     |An array of  |Array  |["example_key"]            |
+   |          |        |optional keys|of     |                           |
+   |          |        |that client  |Strings|                           |
+   |          |        |must         |       |                           |
+   |          |        |understand   |       |                           |
+   |          |        |and process  |       |                           |
+   |          |        |to use this  |       |                           |
+   |          |        |proxy        |       |                           |
+   +----------+--------+-------------+-------+---------------------------+
+   |alpn      |Yes     |An array of  |Array  |["h3","h2"]                |
+   |          |        |Application- |of     |                           |
+   |          |        |Layer        |Strings|                           |
+   |          |        |Protocol     |       |                           |
+   |          |        |Negotiation  |       |                           |
+   |          |        |protocol     |       |                           |
+   |          |        |identifiers  |       |                           |
+   +----------+--------+-------------+-------+---------------------------+
+   |identifier|Yes     |A string used|String |"udp-proxy"                |
+   |          |        |to refer to  |       |                           |
+   |          |        |the proxy,   |       |                           |
+   |          |        |which can be |       |                           |
+   |          |        |referenced by|       |                           |
+   |          |        |other        |       |                           |
+   |          |        |dictionaries,|       |                           |
+   |          |        |such as      |       |                           |
+   |          |        |entries in   |       |                           |
+   |          |        |proxy-match  |       |                           |
+   +----------+--------+-------------+-------+---------------------------+
 
        Table 1: Initial Proxy Information PvD Keys Registry Contents
 
@@ -406,6 +406,9 @@ Table of Contents
    a particular proxy from other dictionaries, specifically those
    defined in Section 4.  The string value is an arbitrary non-empty
    JSON string using UTF-8 encoding as discussed in Section 8.1 of
+   [JSON].  Characters that need to be escaped in JSON strings per
+   Section 7 of [JSON] are NOT RECOMMENDED as they can lead to
+   difficulties in string comparisions as discussed in Section 8.3 of
    [JSON].  Identifier values MAY be duplicated across different proxy
    dictionaries in the proxies array, which indicates that all
    references from other dictionaries to a particular identifier value
@@ -423,10 +426,10 @@ Table of Contents
    configuration information not defined in this specification.
 
    A proprietary key MUST contain at least one underscore character
-   ("_").  This character serves as a separator between a vendor-
-   specific namespace and the key name.  For example, "acme_authmode"
-   could be a proprietary key indicating an authentication mode defined
-   by a vendor named "acme".
+   ("_").  The last underscore serves as a separator between a vendor-
+   specific namespace and the key name.  For example,
+   "acme_tech_authmode" could be a proprietary key indicating an
+   authentication mode defined by a vendor named "acme_tech".
 
    When combined with mandatory array, this mechanism allows
    implementations to extend proxy metadata while maintaining
@@ -808,7 +811,7 @@ content-length = 322
          "proxies": [ ]
        },
        {
-         "subnets": [ "192.168.0.0/16", "2001:DB8::/32" ],
+         "subnets": [ "192.0.2.0/24", "2001:DB8::/32" ],
          "proxies": [ ]
        },
        {
@@ -818,8 +821,8 @@ content-length = 322
    }
 
    In this case, the client will not forward TCP traffic that is
-   destined to hosts matching "*.intranet.example.org", 192.168.0.0/16
-   or 2001:DB8::/32, through the proxies.  Due to the order in "proxies"
+   destined to hosts matching "*.intranet.example.org", 192.0.2.0/24 or
+   2001:DB8::/32, through the proxies.  Due to the order in "proxies"
    array in the last rule of "proxy-match", the client would prefer
    "proxy.example.org:80" over "backup.example.org:80"
 
