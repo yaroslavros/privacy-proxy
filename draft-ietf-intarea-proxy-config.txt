@@ -5,10 +5,10 @@
 Network Working Group                                           T. Pauly
 Internet-Draft                                               Apple, Inc.
 Intended status: Standards Track                           D. Damjanovic
-Expires: 9 September 2026                                      Microsoft
+Expires: 4 November 2026                                       Microsoft
                                                             Y. Rosomakho
                                                                  Zscaler
-                                                            8 March 2026
+                                                              3 May 2026
 
 
        Communicating Proxy Configurations in Provisioning Domains
@@ -16,10 +16,10 @@ Expires: 9 September 2026                                      Microsoft
 
 Abstract
 
-   This document defines a mechanism for accessing Provisioning Domain
-   Additional Information associated with a proxy, such as other proxy
-   URIs that support different protocols and information about which
-   destinations are accessible using a proxy.
+   This document defines a mechanism for accessing provisioning domain
+   information associated with a proxy, such as other proxy URIs that
+   support different protocols and information about which destinations
+   are accessible using a proxy.
 
 Discussion Venues
 
@@ -43,7 +43,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 9 September 2026.
+   This Internet-Draft will expire on 4 November 2026.
 
 Copyright Notice
 
@@ -63,7 +63,8 @@ Table of Contents
 
    1.  Introduction
      1.1.  Background
-     1.2.  Requirements
+     1.2.  Requirements Keywords
+     1.3.  Note to the RFC Editor
    2.  Fetching PvD Additional Information for proxies
      2.1.  Discovery via HTTPS/SVCB Records
    3.  Enumerating proxies within a PvD
@@ -112,7 +113,7 @@ Table of Contents
    These improvements to client behavior can be achieved through the use
    of Provisioning Domains.  Provisioning Domains (PvDs) are defined in
    [PVD] as consistent sets of network configuration information, which
-   can include proxy configuration details Section 2 of [PVD].
+   can include proxy configuration details (Section 2 of [PVD]).
    Section 4.3 of [PVDDATA] defines a JSON [JSON] format for describing
    Provisioning Domain Additional Information, which is an extensible
    dictionary of properties of the Provisioning Domain.
@@ -130,12 +131,6 @@ Table of Contents
    3.  A way to define the set of destinations that are accessible
        through the proxy (Section 4).
 
-   Additionally, this document outlines how these mechanisms might be
-   used to discover proxies associated with a network (Section 5).
-   However, this approach is not described for the purpose of generic
-   proxy discovery, and requires careful security considerations for
-   clients to limit usage to trusted scenarios.
-
    Using this mechanism a client can learn that a legacy insecure HTTP
    proxy that the client is configured with is also accessible using
    HTTPS.  In this way, clients can upgrade to a more secure connection
@@ -143,30 +138,25 @@ Table of Contents
 
 1.1.  Background
 
-   Other non-standard mechanisms for proxy configuration and discovery
-   have been used historically, some of which are described in
-   [RFC3040].
-
-   Proxy Auto Configuration (PAC) files Section 6.2 of [RFC3040] are
-   Javascript scripts that take URLs as input and provide an output of a
-   proxy configuration to use.
-
-   Web Proxy Auto-Discovery Protocol (WPAD) Section 6.4 of [RFC3040]
-   allows networks to advertise proxies to use by advertising a PAC
-   file.  This solution uses the DHCPv4 option 252, reserved for private
-   use according to Section 2.1 of [IANA-DHCP].
-
-   These common (but non-standard) mechanisms only support defining
-   proxies by hostname and port, and do not support configuring a full
-   URI template [URITEMPLATE].
+   Non-standard mechanisms for proxy configuration and discovery have
+   been used historically, some of which are described in the
+   informational [RFC3040]: Proxy Auto Configuration (PAC) files
+   Section 6.2 of [RFC3040] are JavaScript scripts that take URLs as
+   input and provide an output of a proxy configuration to use.  Web
+   Proxy Auto-Discovery Protocol (WPAD) Section 6.4 of [RFC3040] allows
+   networks to advertise proxies to use by advertising a PAC file.  This
+   solution uses the DHCPv4 option 252, reserved for private use
+   according to Section 2.1 of [IANA-DHCP].  These common (but non-
+   standard) mechanisms only support defining proxies by hostname and
+   port, and do not support configuring a full URI template
+   [URITEMPLATE].
 
    The mechanisms defined in this document are intended to offer a
    standard alternative that works for URI-based proxies and avoids
-   dependencies on executing Javascript scripts, which are prone to
-   implementation-specific inconsistencies and can open up security
-   vulnerabilities.
+   dependencies on executing JavaScript scripts, which are prone to
+   implementation inconsistencies and security vulnerabilities.
 
-1.2.  Requirements
+1.2.  Requirements Keywords
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -174,25 +164,39 @@ Table of Contents
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
+1.3.  Note to the RFC Editor
+
+   RFC EDITOR: Please remove this section before publication.
+
+   Various identifier words are used in this draft using the code
+   markdown and are easily noted in the HTML rendering of this draft.
+   The authors kindly request that the RFC editor makes these instances
+   noticeable via appropriate markings in the TXT and PDF renderings of
+   this draft.  The term include, but may not be limited to the
+   following: proxies protocol proxy mandatory alpn identifier
+
 2.  Fetching PvD Additional Information for proxies
 
    This document defines a way to fetch PvD Additional Information
    associated with a proxy.  This PvD describes the properties of the
    network accessible through the proxy.
 
-   In order to fetch PvD Additional Information associated with a proxy,
-   a client issues an HTTP GET request for the well-known PvD URI
-   (".well-known/pvd") as defined in Section 4.1 of [PVDDATA] and the
-   host authority of the proxy.  This is applicable for both proxies
-   that are identified by a host and port only (such as SOCKS proxies
-   and HTTP CONNECT proxies) and proxies that are identified by a URI or
-   URI template.  The fetch MUST use the "https" scheme.  By default,
-   the fetch SHOULD use the standard port for HTTP over TLS (443) and
-   the ".well-known/pvd" path.  However, both the port and the path MAY
-   be overridden by local configuration policy on the client.
+   Clients fetch PvD Additional Information associated with a proxy by
+   issuing an HTTP GET request for a PvD URI using the "application/
+   pvd+json" media type as defined in Section 4.1 of [PVDDATA].  The
+   fetch MUST use the "https" scheme.
 
-   It is not necessary for the client to re-fetch PvD Additional
-   Information unless one of the following conditions occurs:
+   [PVDDATA] defines the well-known PvD URI, that uses a path of
+   "/.well-known/pvd" and is served on the standard port for HTTP over
+   TLS (HTTPS), port 443.  When a client is provisioned with the
+   hostname of a proxy for which it wants to look up PvD Additional
+   Information, the client SHALL use the well-known PvD URI using the
+   host authority of the proxy.  A client can also be directly
+   configured with a HTTPS URI on which to fetch the PvD Information, in
+   which case the fetch SHALL be made to that configured URI.
+
+   A client MAY cache the information it obtained from PvD Additional
+   Information, but it MUST discard cached information if:
 
    *  The current time is beyond the "expires" value defined in
       Section 4.3 of [PVDDATA]
@@ -232,16 +236,17 @@ Table of Contents
 2.1.  Discovery via HTTPS/SVCB Records
 
    To allow clients to determine whether PvD Additional Information is
-   available for a given proxy, this document defines a new SvcParamKey
-   in HTTPS and SVCB DNS records defined in [SVCB-DNS].
+   available for a particular named host (which allows fetching proxy
+   information, as well as any other information in the PvD), this
+   document defines a new SvcParamKey in HTTPS and SVCB DNS records
+   defined in [SVCB-DNS].
 
-   Presence of this SvcParamKey, named pvd indicates that the proxy host
-   supports PvD discovery via the well-known PvD URI ".well-known/pvd"
-   defined in Section 4.1 of [PVDDATA].  The presence of this key in an
-   HTTPS or SVCB record signals that the proxy's PvD Additional
-   Information can be fetched using the "https" scheme from the proxy
-   host on port 443 using the well-known path.  The value of the pvd
-   SvcParamKey MUST be empty.
+   Presence of this SvcParamKey, named pvd, indicates that the host
+   supports PvD discovery via the well-known PvD URI defined in
+   Section 4.1 of [PVDDATA].  The presence of this key in an HTTPS or
+   SVCB record signals that PvD Additional Information can be fetched
+   using the "https" scheme from the host on port 443 using the well-
+   known path.  The value of the pvd SvcParamKey MUST be empty.
 
    A client receiving a DNS record like the following:
 
@@ -251,11 +256,13 @@ Table of Contents
    MAY perform a PvD fetch from "https://proxy.example.org/.well-known/
    pvd" using HTTP GET method.
 
-   While this key is particularly useful for detecting proxy
-   configurations when looking up a DNS record for a known proxy name,
-   this key generically provides a hint that PvD Additional Information
-   is available, and can be used for use cases unrelated to proxies.
-   This marker is advisory; clients MAY still attempt to fetch PvD
+   This key is useful for detecting proxy configurations when looking up
+   a DNS record for a known proxy name, but is a generic hint that PvD
+   Additional Information is available.  Future extensions to PvD
+   Additional Information can also take advantage of this discovery
+   mechanism.
+
+   This hint is advisory; clients MAY still attempt to fetch PvD
    Additional Information even if pvd SvcParamKey is not present.
 
    The pvd SvcParamKey is registered with IANA as described in
@@ -272,8 +279,8 @@ Table of Contents
 
    When a PvD that contains the proxies key is fetched from a known
    proxy using the method described in Section 2, the proxies array
-   describes equivalent proxies (potentially supporting other protocols)
-   that can be used in addition to the known proxy.
+   describes proxies that can be used in addition to the known proxy.
+   The proxies may potentially supporting other protocols.
 
    Such cases are useful for informing clients of related proxies as a
    discovery method, with the assumption that the client already is
@@ -287,59 +294,61 @@ Table of Contents
 
    This document defines two required keys for the sub-dictionaries in
    the proxies array: protocol and proxy.  There are also optional keys,
-   including mandatory, alpn, and identifier.  Other optional keys can
-   be added to the dictionary to further define or restrict the use of a
-   proxy.  The keys are registered with IANA as described in
-   Section 7.2, with the initial content provided below.
+   including mandatory, alpn, and identifier.  Other optional keys (keys
+   defined in future extensions or proprietary key defined in
+   Section 3.2) can be added to the dictionary to further define or
+   restrict the use of a proxy.  The keys are registered with IANA as
+   described in Section 7.2, with the initial content provided below.
 
-   +==========+========+=============+=======+===========================+
-   |JSON Key  |Optional|Description  |Type   |Example                    |
-   +==========+========+=============+=======+===========================+
-   |protocol  |No      |The protocol |String |"connect-udp"              |
-   |          |        |used to      |       |                           |
-   |          |        |communicate  |       |                           |
-   |          |        |with the     |       |                           |
-   |          |        |proxy        |       |                           |
-   +----------+--------+-------------+-------+---------------------------+
-   |proxy     |No      |String       |String |"https://example.org:4443/ |
-   |          |        |containing   |       |masque/                    |
-   |          |        |the URI      |       |{?target_host,target_port}"|
-   |          |        |template or  |       |                           |
-   |          |        |host and port|       |                           |
-   |          |        |of the proxy,|       |                           |
-   |          |        |depending on |       |                           |
-   |          |        |the format   |       |                           |
-   |          |        |defined by   |       |                           |
-   |          |        |the protocol |       |                           |
-   +----------+--------+-------------+-------+---------------------------+
-   |mandatory |Yes     |An array of  |Array  |["example_key"]            |
-   |          |        |optional keys|of     |                           |
-   |          |        |that client  |Strings|                           |
-   |          |        |must         |       |                           |
-   |          |        |understand   |       |                           |
-   |          |        |and process  |       |                           |
-   |          |        |to use this  |       |                           |
-   |          |        |proxy        |       |                           |
-   +----------+--------+-------------+-------+---------------------------+
-   |alpn      |Yes     |An array of  |Array  |["h3","h2"]                |
-   |          |        |Application- |of     |                           |
-   |          |        |Layer        |Strings|                           |
-   |          |        |Protocol     |       |                           |
-   |          |        |Negotiation  |       |                           |
-   |          |        |protocol     |       |                           |
-   |          |        |identifiers  |       |                           |
-   +----------+--------+-------------+-------+---------------------------+
-   |identifier|Yes     |A string used|String |"udp-proxy"                |
-   |          |        |to refer to  |       |                           |
-   |          |        |the proxy,   |       |                           |
-   |          |        |which can be |       |                           |
-   |          |        |referenced by|       |                           |
-   |          |        |other        |       |                           |
-   |          |        |dictionaries,|       |                           |
-   |          |        |such as      |       |                           |
-   |          |        |entries in   |       |                           |
-   |          |        |proxy-match  |       |                           |
-   +----------+--------+-------------+-------+---------------------------+
+   +==========+=========+=============+=======+===========================+
+   |JSON Key  |Optional/|Description  |Type   |Example                    |
+   |          |Required |             |       |                           |
+   +==========+=========+=============+=======+===========================+
+   |protocol  |required |The protocol |String |"connect-udp"              |
+   |          |         |used to      |       |                           |
+   |          |         |communicate  |       |                           |
+   |          |         |with the     |       |                           |
+   |          |         |proxy        |       |                           |
+   +----------+---------+-------------+-------+---------------------------+
+   |proxy     |required |String       |String |"https://example.org:4443/ |
+   |          |         |containing   |       |masque/                    |
+   |          |         |the URI      |       |{?target_host,target_port}"|
+   |          |         |template or  |       |                           |
+   |          |         |host and port|       |                           |
+   |          |         |of the proxy,|       |                           |
+   |          |         |depending on |       |                           |
+   |          |         |the format   |       |                           |
+   |          |         |defined by   |       |                           |
+   |          |         |the protocol |       |                           |
+   +----------+---------+-------------+-------+---------------------------+
+   |mandatory |optional |An array of  |Array  |["example_key"]            |
+   |          |         |optional keys|of     |                           |
+   |          |         |that client  |Strings|                           |
+   |          |         |must         |       |                           |
+   |          |         |understand   |       |                           |
+   |          |         |and process  |       |                           |
+   |          |         |to use this  |       |                           |
+   |          |         |proxy        |       |                           |
+   +----------+---------+-------------+-------+---------------------------+
+   |alpn      |optional |An array of  |Array  |["h3","h2"]                |
+   |          |         |Application- |of     |                           |
+   |          |         |Layer        |Strings|                           |
+   |          |         |Protocol     |       |                           |
+   |          |         |Negotiation  |       |                           |
+   |          |         |protocol     |       |                           |
+   |          |         |identifiers  |       |                           |
+   +----------+---------+-------------+-------+---------------------------+
+   |identifier|optional |A string used|String |"udp-proxy"                |
+   |          |         |to refer to  |       |                           |
+   |          |         |the proxy,   |       |                           |
+   |          |         |which can be |       |                           |
+   |          |         |referenced by|       |                           |
+   |          |         |other        |       |                           |
+   |          |         |dictionaries,|       |                           |
+   |          |         |such as      |       |                           |
+   |          |         |entries in   |       |                           |
+   |          |         |proxy-match  |       |                           |
+   +----------+---------+-------------+-------+---------------------------+
 
        Table 1: Initial Proxy Information PvD Keys Registry Contents
 
@@ -407,8 +416,8 @@ Table of Contents
    associated with this server.  For HTTP proxies, this can indicate if
    the proxy supports HTTP/3, HTTP/2, etc.
 
-   The value of identifier key is a string that can be used to refer to
-   a particular proxy from other dictionaries, specifically those
+   The value of the identifier key is a string that can be used to refer
+   to a particular proxy from other dictionaries, specifically those
    defined in Section 4.  The string value is an arbitrary non-empty
    JSON string using UTF-8 encoding as discussed in Section 8.1 of
    [JSON].  Characters that need to be escaped in JSON strings per
@@ -420,8 +429,8 @@ Table of Contents
    Proxies without the identifier key are expected to accept any traffic
    since their destinations cannot be contained in proxy-match array
    defined in Section 4.  Proxies with identifier keys are expected to
-   accept only traffic matching rules in the proxy-match array and
-   SHOULD NOT be used if they are not included in the proxy-match array.
+   accept traffic based on matching rules in the proxy-match array and
+   MUST NOT be used if they are not included in the proxy-match array.
 
 3.2.  Proprietary keys in proxy configurations
 
@@ -430,13 +439,14 @@ Table of Contents
    configuration information not defined in this specification.
 
    A proprietary key MUST contain at least one underscore character
-   ("_").  The right-most underscore serves as a separator between a
-   vendor-specific namespace and the key name, i.e. the string to the
-   right of the right-most underscore is the key name and the string
-   left from the underscore specifies the vendor-specific namespace.
-   For example, "acme_tech_authmode" could be a proprietary key
-   indicating an authentication mode defined by a vendor named
-   "acme_tech".
+   ("_") as a delimiter in the string, with characters both before and
+   after the underscore.  The right-most underscore serves as a
+   separator between a vendor-specific namespace and the key name; i.e.,
+   the string to the right of the right-most underscore is the key name
+   and the string to the left of the right-most underscore specifies the
+   vendor-specific namespace.  For example, "example_tech_authmode"
+   could be a proprietary key indicating an authentication mode defined
+   by a vendor named "Example Tech".
 
    When combined with mandatory array, this mechanism allows
    implementations to extend proxy metadata while maintaining
@@ -509,7 +519,7 @@ content-length = 322
    no proxy defined in this PvD can process matching traffic, or an
    array of strings with at least one proxy identifier string.  All
    destination rules MUST also contain at least one other key use to
-   describe the destination properties.  Each key MUST correspond to an
+   describe the destination properties.  Each key's value MUST be an
    array with at least one entry.
 
    Extensions or proprietary deployments can define new keys to describe
@@ -560,37 +570,35 @@ content-length = 322
    subdomains instead of specific hostnames.  Note that this can be used
    to match multiple levels of subdomains.  For example, "*.example.com"
    matches "internal.example.com" as well as "www.public.example.com".
-   Entries that include the wildcard prefix also MUST be treated as if
-   they match an FQDN that only contains the string after the prefix,
-   with no subdomain.  So, an entry "*.example.com" in the domains array
-   of a proxy-match rule would match the FQDN "example.com".  This is
-   done to prevent commonly needing to include both "*.example.com" and
-   "example.com" in the domains array of a proxy-match rule.  Matches
-   are performed against absolute domain names, independent of the
-   client's configured DNS search suffixes.  Clients MUST NOT apply
-   local DNS suffix search rules when interpreting domains entries.  A
-   trailing dot (".") at the end of a domain name is not required; the
-   matching logic is the same regardless of its presence or absence.
+   Entries that include the wildcard prefix also match an FQDN that only
+   contains the string after the prefix, with no subdomain.  So, an
+   entry "*.example.com" in the domains array of a proxy-match rule
+   would match the FQDN "example.com".  This is done to prevent commonly
+   needing to include both "*.example.com" and "example.com" in the
+   domains array of a proxy-match rule.  Matches are performed against
+   absolute domain names, independent of the client's configured DNS
+   search suffixes.  Clients MUST NOT apply local DNS suffix search
+   rules when interpreting domains entries.  A string MAY have a
+   trailing dot ("."); it does not affect the matching logic.
 
    The subnets array includes IPv4 and IPv6 address literals, as well as
-   IPv4 and IPv6 address subnets written using CIDR notation [CIDR].
-   Subnet-based destination information can apply to cases where
-   applications are communicating directly with an IP address (without
-   having resolved a DNS name) as well as cases where an application
-   resolved a DNS name to a set of IP addresses.  Note that if
-   destination rules include an empty proxies array (indicating that no
-   proxy is applicable for this subnet), an application can only
-   reliably follow this destination rule if it resolves DNS names prior
-   to proxying.
+   IPv4 address subnets represented using CIDR notation [CIDR] and IPv6
+   address prefixes Section 2.3 of [IPv6-ADDR].  Subnet-based
+   destination information can apply to cases where applications are
+   communicating directly with an IP address (without having resolved a
+   DNS name) as well as cases where an application resolved a DNS name
+   to a set of IP addresses.  Note that if destination rules include an
+   empty proxies array (indicating that no proxy is applicable for this
+   subnet), an application can only reliably follow this destination
+   rule if it resolves DNS names prior to proxying.
 
    The ports array includes specific ports (used for matching TCP and/or
    UDP ports), as well as ranges of ports written with a low port value
    and a high port value, with a - in between.  For example, "1024-2048"
-   matches all ports from 1024 to 2048, including the 1024 and 2048.  If
-   ports key is not present, all ports are assumed to match.  The array
-   may contain individual port numbers (such as "80") or inclusive
-   ranges of ports.  For example, "1024-2048" matches all ports from
-   1024 to 2048, including the 1024 and 2048.
+   matches all ports from 1024 to 2048, including port 1024 and 2048.
+   If ports key is not present, all ports are assumed to match.  The
+   array may contain individual port numbers (such as "80") or inclusive
+   ranges of ports.
 
 4.2.  Using Destination Rules
 
@@ -603,7 +611,7 @@ content-length = 322
    such that a client can evaluate the rules from the first in the array
    to the last in the array, and attempt using the matching proxy or
    proxies from the earliest matching rule first.  If earliest matching
-   rule has empty array of proxies client SHOULD NOT send matching
+   rule has empty array of proxies, a client MUST NOT send matching
    traffic to any proxy defined in this PvD.
 
    In order to match a destination rule in the proxy-match array, all
@@ -612,16 +620,17 @@ content-length = 322
    to match at least one of the entries in the domains array and one of
    the entries in the ports array.  In addition, a destination rule is
    considered a match only if at least one of the associated proxy
-   identifiers supports the protocol required by the connection attempt
-   (for example, connect-udp for UDP traffic).  If no listed proxy
-   identifier is applicable to the protocol, the rule MUST be treated as
-   not matching, and the client continues evaluation of subsequent
-   rules.
+   identifiers is supported by the client(client understand all
+   mandatory keys in the protocol description) and supports the protocol
+   required by the connection attempt (for example, connect-udp for UDP
+   traffic).  If no listed proxy identifier is applicable, the rule MUST
+   be treated as not matching, and the client continues evaluation of
+   subsequent rules.
 
    A matched rule will then either point to one or more proxy identifier
    values, which correspond to proxies defined in the array from
    Section 3, or instructs the client to not send the matching traffic
-   to any proxy.  If a matching rule contains more than one identifier
+   to any proxy.  If a matching rule contains more than one identifier,
    the client MUST treat the array as an ordered list, where the first
    identifier is the most preferred.  Multiple proxy dictionaries can
    contain the same identifier value.  In this case, the client can
@@ -655,8 +664,6 @@ content-length = 322
    ignore the entire destination rule in which the key appears.  This
    ensures that unknown or unsupported matching logic does not
    inadvertently influence proxy selection or bypass security controls.
-   This handling applies uniformly across all match rules, including
-   fallback rules.
 
 4.4.  Examples
 
@@ -699,7 +706,7 @@ content-length = 322
    resumption.  The client will not use the proxies defined in this
    configuration to hosts outside of the "*.internal.example.org" zone.
 
-   In the next example, two proxies are defined with a separate
+   In the next example, two proxies are defined with a distinct
    identifier, and there are three destination rules:
 
    {
@@ -873,23 +880,25 @@ content-length = 322
 5.  Discovering proxies from network PvDs
 
    [PVDDATA] defines how PvD Additional Information is discovered based
-   on network advertisements using Router Advertisements [RFC4861].  A
-   network defining its configuration via PvD information can include
-   the proxies key (Section 3) to inform clients of a list of proxies
-   available on the network.
+   on network advertisements using Router Advertisements [RFC4861].
+   This means that a network defining its configuration via PvD
+   information can include the proxies key (Section 3).  However,
+   clients MUST NOT automatically use these proxy configurations, unless
+   the device has been explicitly provisioned to trust this
+   configuration from the network for specific proxy hosts; for example,
+   a corporate-managed device could use this mechanism on an
+   authenticated corporate network to learn which of an allowed set of
+   proxy URIs are available at this particular location.
 
-   This association of proxies with the network's PvD can be used as a
-   mechanism to discover proxies, as an alternative to PAC files.
-   However, client systems MUST NOT automatically send traffic over
-   proxies advertised in this way without explicit configuration,
-   policy, or user permission.  For example, a client can use this
-   mechanism to choose between known proxies, such as if the client was
-   already proxying traffic and has multiple options to choose between.
-
-   Further security and experience considerations are needed for these
-   cases.
+   Future specifications can define ways to dynamically trust proxy
+   configurations delivered by a network, but such mechanisms are out of
+   scope for this document.
 
 6.  Security Considerations
+
+   This document extends the PvD Additional Information defined in
+   [PVDDATA]; as such, all security considerations from [PVDDATA] apply
+   here.
 
    The mechanisms in this document allow clients using a proxy to
    "upgrade" a configuration for a cleartext HTTP/1.1 or SOCKS proxy
@@ -904,6 +913,16 @@ content-length = 322
    that the hostname of the proxy, the identifier of the PvD, and the
    validated hostname identity on the certificate all match.
 
+   The lists of proxies and destination rules provided by the PvD
+   Additional Information might exceed the memory constraints or
+   processing capabilities of clients, particularly for constrained
+   devices.  A client that is not able to process all of the content of
+   either the proxies list or destination rules due to resource
+   limitations MUST ignore the proxy configuration entirely.  Clients
+   MUST implement limits for the maximum number of proxy configurations
+   and destination rules that they are able to process; the specific
+   limits will vary based on device capabilities.
+
    When using information in destination rules (Section 4), clients MUST
    only allow the PvD configuration to narrow the scope of traffic that
    they will send through a proxy.  Clients that are configured by
@@ -911,6 +930,10 @@ content-length = 322
    proxy can learn about rules that will cause them to send more
    narrowly-scoped traffic, but MUST NOT send traffic that would go
    beyond what is allowed by local policy.
+
+   As described in Section 5, proxy configuration discovered based on
+   RAs from a network MUST NOT be automatically used by clients to start
+   using proxies when they would otherwise not proxy traffic.
 
 7.  IANA Considerations
 
@@ -967,7 +990,7 @@ content-length = 322
    requested to ensure that defined keys do not overlap in names or
    semantics, do not contain an underscore character ("_") in the names
    (since underscores are reserved for vendor-specific keys), and have
-   clear format definitions.  The reference and notes fields MAY be
+   clear format definitions.  The reference and notes fields may be
    empty.
 
 7.3.  New PvD Proxy Protocol Registry
@@ -981,7 +1004,7 @@ content-length = 322
    New assignments in the "Proxy Protocol PvD Values" registry will be
    administered by IANA through Expert Review [RFC8126].  Experts are
    requested to ensure that defined keys do not overlap in names.  The
-   reference and notes fields MAY be empty.
+   reference and notes fields may be empty.
 
 7.4.  New PvD Proxy Destination Rule Registry
 
@@ -1022,19 +1045,20 @@ content-length = 322
               Negotiation Extension", RFC 7301, DOI 10.17487/RFC7301,
               July 2014, <https://www.rfc-editor.org/rfc/rfc7301>.
 
+   [CIDR]     Fuller, V. and T. Li, "Classless Inter-domain Routing
+              (CIDR): The Internet Address Assignment and Aggregation
+              Plan", BCP 122, RFC 4632, DOI 10.17487/RFC4632, August
+              2006, <https://www.rfc-editor.org/rfc/rfc4632>.
+
    [HTTP]     Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,
               Ed., "HTTP Semantics", STD 97, RFC 9110,
               DOI 10.17487/RFC9110, June 2022,
               <https://www.rfc-editor.org/rfc/rfc9110>.
 
-   [IANA_PVD] "Additional Information PvD Keys Registry", n.d.,
-              <https://www.iana.org/assignments/pvds/
-              pvds.xhtml#additional-information-pvd-keys>.
-
-   [IANA_SVCB]
-              "SvcParamKeys Registry", n.d.,
-              <https://www.iana.org/assignments/dns-svcb/dns-
-              svcb.xhtml#dns-svcparamkeys>.
+   [IPv6-ADDR]
+              Hinden, R. and S. Deering, "IP Version 6 Addressing
+              Architecture", RFC 4291, DOI 10.17487/RFC4291, February
+              2006, <https://www.rfc-editor.org/rfc/rfc4291>.
 
    [JSON]     Bray, T., Ed., "The JavaScript Object Notation (JSON) Data
               Interchange Format", STD 90, RFC 8259,
@@ -1078,11 +1102,6 @@ content-length = 322
 
 8.2.  Informative References
 
-   [CIDR]     Fuller, V. and T. Li, "Classless Inter-domain Routing
-              (CIDR): The Internet Address Assignment and Aggregation
-              Plan", BCP 122, RFC 4632, DOI 10.17487/RFC4632, August
-              2006, <https://www.rfc-editor.org/rfc/rfc4632>.
-
    [CONNECT-IP]
               Pauly, T., Ed., Schinazi, D., Chernyakhovsky, A.,
               Kühlewind, M., and M. Westerlund, "Proxying IP in HTTP",
@@ -1092,9 +1111,9 @@ content-length = 322
    [CONNECT-TCP]
               Schwartz, B. M., "Template-Driven HTTP CONNECT Proxying
               for TCP", Work in Progress, Internet-Draft, draft-ietf-
-              httpbis-connect-tcp-10, 5 December 2025,
+              httpbis-connect-tcp-11, 20 March 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-httpbis-
-              connect-tcp-10>.
+              connect-tcp-11>.
 
    [CONNECT-UDP]
               Schinazi, D., "Proxying UDP in HTTP", RFC 9298,
@@ -1106,6 +1125,15 @@ content-length = 322
               of New DHCP Options and Message Types", BCP 43, RFC 2939,
               DOI 10.17487/RFC2939, September 2000,
               <https://www.rfc-editor.org/rfc/rfc2939>.
+
+   [IANA_PVD] "Additional Information PvD Keys Registry", n.d.,
+              <https://www.iana.org/assignments/pvds/
+              pvds.xhtml#additional-information-pvd-keys>.
+
+   [IANA_SVCB]
+              "SvcParamKeys Registry", n.d.,
+              <https://www.iana.org/assignments/dns-svcb/dns-
+              svcb.xhtml#dns-svcparamkeys>.
 
    [IKEV2SPLIT]
               Pauly, T. and P. Wouters, "Split DNS Configuration for the
