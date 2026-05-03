@@ -1714,9 +1714,11 @@ for a particular proxy or set of proxies.<a href="#section-4-3" class="pilcrow">
 <p id="section-4.1-1">This document defines four keys for destination rules. Any destination rule MUST contain
 the <code>proxies</code> key. Values corresponding to the <code>proxies</code> key may be either an empty array,
 which implies that no proxy defined in this PvD can process matching traffic, or an array of strings
-with at least one proxy <code>identifier</code> string. All destination rules MUST also contain at least one
-other key use to describe the destination properties. Each key's value MUST be an array with at least
-one entry.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+with at least one proxy <code>identifier</code> string. A destination rule MAY contain one or more additional
+keys that describe destination properties. If no destination property keys are present, the
+rule matches all destinations, subject to proxy protocol and proxy applicability checks
+described in <a href="#using-destination-rules" class="auto internal xref">Section 4.2</a>. Each destination property key's value MUST be an
+array with at least one entry.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.1-2">Extensions or proprietary deployments can define new keys to describe destination properties.
 Any destination rules that include keys not known to the client, or values that cannot be
 parsed, MUST be ignored in their entirety.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
@@ -1810,28 +1812,63 @@ can evaluate the rules from the first in the array to the last in the array, and
 using the matching proxy or proxies from the earliest matching rule first. If earliest matching
 rule has empty array of <code>proxies</code>, a client MUST NOT send matching traffic to any proxy defined
 in this PvD.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
-<p id="section-4.2-3">In order to match a destination rule in the <code>proxy-match</code> array, all properties MUST apply. For
-example, if a destination rule includes a <code>domains</code> array and a <code>ports</code> array, traffic that matches
-the rule needs to match at least one of the entries in the <code>domains</code> array and one of the entries in the
-<code>ports</code> array. In addition, a destination rule is considered a match only if at least one of the
-associated proxy identifiers is supported by the client(client understand all mandatory keys in the
-protocol description) and supports the protocol required by the connection attempt (for
-example, <code>connect-udp</code> for UDP traffic). If no listed proxy identifier is applicable,
-the rule MUST be treated as not matching, and the client continues evaluation of subsequent rules.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
-<p id="section-4.2-4">A matched rule will then either point to one or more proxy <code>identifier</code> values, which correspond
+<p id="section-4.2-3">When evaluating a destination rule, all destination properties that are present MUST apply.
+For example, if a destination rule includes a <code>domains</code> array and a <code>ports</code> array, traffic
+that matches the rule needs to match at least one of the entries in the <code>domains</code> array and
+one of the entries in the <code>ports</code> array.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.2-4">For clarity, a client evaluates each destination rule in the <code>proxy-match</code> array as follows:<a href="#section-4.2-4" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-4.2-5">
+<li id="section-4.2-5.1">
+            <p id="section-4.2-5.1.1">If the rule contains any key that the client does not understand, or any value that the
+client cannot parse, the client MUST ignore the rule and continue evaluating subsequent rules.<a href="#section-4.2-5.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-4.2-5.2">
+            <p id="section-4.2-5.2.1">The client evaluates all destination properties present in the rule. If the <code>domains</code> key
+is present, the connection attempt MUST have a DNS name available for matching, and that
+DNS name MUST match at least one entry in the <code>domains</code> array. If the <code>subnets</code> key is
+present, the connection attempt MUST have one or more destination IP addresses available
+for matching, and at least one of those IP addresses MUST match at least one entry in the
+<code>subnets</code> array. The destination IP addresses can be IP address literals supplied by the
+application or IP addresses obtained by resolving a DNS name. If the <code>ports</code>
+key is present, the destination port MUST match at least one entry in the
+<code>ports</code> array. Any other understood destination property keys that are present
+MUST also match.<a href="#section-4.2-5.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-4.2-5.3">
+            <p id="section-4.2-5.3.1">If the destination properties do not all match, the client continues
+evaluating subsequent rules.<a href="#section-4.2-5.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-4.2-5.4">
+            <p id="section-4.2-5.4.1">If the destination properties match and the <code>proxies</code> array is empty, the
+client MUST NOT send the matching traffic to any proxy defined in this PvD,
+and evaluation of the <code>proxy-match</code> array for this PvD stops.<a href="#section-4.2-5.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-4.2-5.5">
+            <p id="section-4.2-5.5.1">If the destination properties match and the <code>proxies</code> array is not empty, the
+client determines whether at least one listed proxy identifier corresponds to
+a proxy dictionary that the client can use for the requested proxy protocol.
+A proxy dictionary is usable only if its <code>protocol</code> value matches the proxy
+protocol required by the connection attempt and the client understands and can
+process all keys listed in the proxy dictionary's <code>mandatory</code> array. If no
+listed proxy identifier provides a usable proxy dictionary, the rule does not
+provide a usable proxy for this connection attempt and the client continues
+evaluating subsequent rules.<a href="#section-4.2-5.5.1" class="pilcrow">¶</a></p>
+</li>
+        </ol>
+<p id="section-4.2-6">A matched rule will then either point to one or more proxy <code>identifier</code> values, which correspond
 to proxies defined in the array from <a href="#proxy-enumeration" class="auto internal xref">Section 3</a>, or instructs the client to not send the
 matching traffic to any proxy. If a matching rule contains more than one <code>identifier</code>, the client
 MUST treat the array as an ordered list, where the first <code>identifier</code> is the most preferred.
 Multiple proxy dictionaries can contain the same <code>identifier</code> value. In this case, the client
 can choose any of the proxies; however, the client ought to prefer using the same proxy for the consecutive requests
-to the same proxy <code>identifier</code> to increase connection reuse.<a href="#section-4.2-4" class="pilcrow">¶</a></p>
-<p id="section-4.2-5">Entries listed in a <code>proxy-match</code> object MUST NOT expand the set of destinations that a client is
+to the same proxy <code>identifier</code> to increase connection reuse.<a href="#section-4.2-6" class="pilcrow">¶</a></p>
+<p id="section-4.2-7">Entries listed in a <code>proxy-match</code> object MUST NOT expand the set of destinations that a client is
 willing to send to a particular proxy. The array can only narrow the set of destinations
 that the client is willing to send through the proxy. For example, if the client
 has a local policy to only send requests for "*.example.com" to a proxy
 "proxy.example.com", and <code>domains</code> array of a <code>match</code> object contains "internal.example.com" and
 "other.company.com", the client would end up only proxying "internal.example.com"
-through the proxy.<a href="#section-4.2-5" class="pilcrow">¶</a></p>
+through the proxy.<a href="#section-4.2-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="proprietary-keys-in-destination-rules">
